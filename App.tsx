@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import Home from './screens/Home';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FollowTradeForm from './screens/FollowTradeForm';
 import SellUserTradeForm from './screens/SellUserTradeForm';
@@ -28,7 +29,7 @@ const theme = {
 
 export default function App() {
 	return (
-		<NavigationContainer>
+		<NavigationContainer theme={DarkTheme}>
 			<PaperProvider theme={theme}>
 				<Stack.Navigator initialRouteName="LoginScreen">
 					<Stack.Screen

@@ -1,8 +1,9 @@
-import React from 'react';
-import { ScrollView, StyleSheet, RefreshControl } from 'react-native';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, RefreshControl, Text } from 'react-native';
 import { getUserId } from '../helpers';
 import { useWindyTrades, useUserTrades } from '../hooks/useWindyTrades';
 import { useIsFocused } from '@react-navigation/native';
+import { InteractionManager } from 'react-native';
 
 import TradesList from '../components/TradesList';
 
@@ -21,7 +22,7 @@ const WindyTrades: React.FC<{}> = () => {
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		wait(2000).then(() => setRefreshing(false));
-	}, [useUserTrades]);
+	}, [useWindyTrades]);
 
 	return (
 		<ScrollView
@@ -30,12 +31,20 @@ const WindyTrades: React.FC<{}> = () => {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			<TradesList
-				title={'Trades today'}
-				tradeType={'windy'}
-				data={windyTrades}
-				followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
-			/>
+			{windyTrades.length != 0 ? (
+				<TradesList
+					title={'Trades today'}
+					tradeType={'windy'}
+					data={windyTrades}
+					followedTrades={
+						userTrades
+							? userTrades.map((userTrades) => userTrades.trade.id)
+							: undefined
+					}
+				/>
+			) : (
+				<Text style={styles.noTradesText}>No trades today</Text>
+			)}
 		</ScrollView>
 	);
 };
@@ -44,6 +53,12 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#121212',
+	},
+	noTradesText: {
+		alignSelf: 'center',
+		color: '#fff',
+		fontSize: 20,
+		paddingTop: 40,
 	},
 });
 

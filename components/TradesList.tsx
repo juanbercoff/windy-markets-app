@@ -8,7 +8,7 @@ import ListItemUser from './ListItemUser';
 interface Props {
 	title: string;
 	data: Trade[] | UserTrade[];
-	followedTrades: Array<number>;
+	followedTrades?: Array<number>;
 	tradeType: 'windy' | 'user';
 }
 const TradesList: React.FC<Props> = ({
@@ -25,14 +25,14 @@ const TradesList: React.FC<Props> = ({
 						<ListItem
 							key={trade.id}
 							trade={trade}
-							following={followedTrades.includes(trade.id)}
+							following={followedTrades?.includes(trade.id)}
 						/>
 				  ))
 				: data.map((trade: any) => (
 						<ListItemUser
 							key={trade.id}
 							trade={trade}
-							following={followedTrades.includes(trade.id)}
+							following={followedTrades?.includes(trade.id)}
 						/>
 				  ))}
 		</List.Section>

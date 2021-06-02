@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { UserTrade, Trade } from '../types/types';
+import Constants from 'expo-constants';
 
 export const useWindyTrades = (shouldFetch: boolean, isFocused: boolean) => {
 	const [windyTrades, setWindyTrades] = useState<Trade[]>([]);
 	const [fetching, setFetching] = useState<Boolean>(false);
-
 	const getWindyTrades = useCallback(async () => {
 		setFetching(true);
 		try {
 			const response = await fetch(
-				'http://192.168.0.115:3000/api/trades/current',
+				Constants.manifest.extra.API_URL + '/api/trades/current',
 				{
 					method: 'GET',
 					credentials: 'include',
@@ -48,7 +48,7 @@ export const useUserTrades = (
 		setFetching(true);
 		try {
 			const response = await fetch(
-				`http://192.168.0.115:3000/api/userTrades/all/${userId}`,
+				`${Constants.manifest.extra.API_URL}/api/userTrades/all/${userId}`,
 				{
 					method: 'GET',
 					credentials: 'include',

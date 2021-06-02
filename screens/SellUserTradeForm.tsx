@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
+import Constants from 'expo-constants';
 
 interface Props {}
 
@@ -23,17 +24,22 @@ const SellUserTradeForm: React.FC<Props> = () => {
 	const navigation = useNavigation();
 	const route = useRoute<RouteProp<RouteParams, 'CloseTradeForm'>>();
 	const { tradeId } = route.params;
+
 	const handleSubmitForm = async (values: FormValues) => {
-		await fetch(`http://192.168.0.115:3000/api/userTrades/close/${tradeId}`, {
-			body: JSON.stringify({
-				closePrice: values.closePrice,
-			}),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			method: 'PUT',
-		});
-		//const result = await res.json();
+		const res = await fetch(
+			`${Constants.manifest.extra.API_URL}/api/userTrades/close/${tradeId}`,
+			{
+				body: JSON.stringify({
+					closePrice: values.closePrice,
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				method: 'PUT',
+			}
+		);
+		const result = await res.json();
+		console.log(result);
 		navigation.navigate('Your Trades');
 	};
 

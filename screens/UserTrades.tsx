@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, RefreshControl, Text } from 'react-native';
 import TradesList from '../components/TradesList';
 import { getUserId } from '../helpers';
 import { useIsFocused } from '@react-navigation/native';
@@ -28,12 +28,18 @@ const UserTrades: React.FC<{}> = () => {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			<TradesList
-				title={'Your trades'}
-				tradeType={'user'}
-				data={userTrades}
-				followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
-			/>
+			{userTrades.length != 0 ? (
+				<TradesList
+					title={'Your trades'}
+					tradeType={'user'}
+					data={userTrades}
+					followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
+				/>
+			) : (
+				<Text style={styles.noTradesText}>
+					You are not following any trades
+				</Text>
+			)}
 		</ScrollView>
 	);
 };
@@ -42,6 +48,12 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#121212',
+	},
+	noTradesText: {
+		alignSelf: 'center',
+		color: '#fff',
+		fontSize: 20,
+		paddingTop: 40,
 	},
 });
 

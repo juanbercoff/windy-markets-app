@@ -1,11 +1,9 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import WindyTrades from './WindyTrades';
 import UserTrades from './UserTrades';
 import Profile from './Profile';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-import FollowTradeForm from './FollowTradeForm';
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 const Tab = createMaterialBottomTabNavigator();
@@ -50,5 +48,11 @@ const Home: React.FC<{}> = () => {
 		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: '#121212',
+	},
+});
 
 export default Home;

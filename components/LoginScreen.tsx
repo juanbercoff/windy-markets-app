@@ -17,6 +17,7 @@ import {
 	Paragraph,
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -24,6 +25,11 @@ interface LoginResponse {
 	token: string;
 	role: string;
 	userId: string;
+}
+
+interface LoginData {
+	email: string;
+	password: string;
 }
 
 const storeResponse = async (res: LoginResponse) => {
@@ -43,18 +49,16 @@ export default function Login({ navigation }) {
 
 	const hideDialog = () => setVisible(false);
 
-	const loginHandler = (data) => {
+	const loginHandler = (data: LoginData) => {
 		//TODO input validation
-		return fetch('http://192.168.0.115:3000/api/user/login', {
+		return fetch(Constants.manifest.extra.API_URL + '/api/user/login', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: 'test@test.com', password: 'testest' }),
+			body: JSON.stringify({ email: 'token@test.com', password: 'testest' }),
 		})
 			.then((res) => {
 				if (res.status == 200) {
 					return res.json();
-
-					console.log('token stored ' + res.headers.map['token']);
 				} else {
 					return showDialog();
 				}
@@ -68,11 +72,10 @@ export default function Login({ navigation }) {
 	};
 
 	return (
-		<KeyboardAvoidingView style={styles.container} behavior="position">
+		<View style={styles.container}>
 			<StatusBar animated={true} barStyle={'light-content'} />
 			<Image style={styles.logo} source={require('../assets/logoBlack.png')} />
 			<View style={styles.inputContainer}>
-				<Text style={styles.welcomeText}>Welcome!</Text>
 				<Formik
 					initialValues={{ email: '', password: '' }}
 					onSubmit={(values) => {
@@ -82,6 +85,7 @@ export default function Login({ navigation }) {
 					{(props) => (
 						<View>
 							<TextInput
+								keyboardType="email-address"
 								style={styles.inputs}
 								placeholder="Your email"
 								onChangeText={props.handleChange('email')}
@@ -92,10 +96,12 @@ export default function Login({ navigation }) {
 							/>
 							<TextInput
 								style={styles.inputs}
+								autoCapitalize="none"
 								showSoftInputOnFocus
 								focusable
 								placeholder="Your password"
 								onChangeText={props.handleChange('password')}
+								secureTextEntry={true}
 								value={props.values.password}
 								mode="outlined"
 							/>
@@ -134,25 +140,24 @@ export default function Login({ navigation }) {
 					Sign Up
 				</Text>
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		flexDirection: 'column',
 		alignItems: 'center',
-		paddingTop: 150,
+		paddingTop: 100,
 		backgroundColor: '#121212',
 	},
 	logo: {
 		height: 131,
 		width: 84,
-		alignSelf: 'center',
 	},
 	inputContainer: {
-		marginTop: 50,
-		flex: 1,
+		paddingTop: 50,
 	},
 	inputs: {
 		width: screenWidth * 0.7,
@@ -162,14 +167,12 @@ const styles = StyleSheet.create({
 		fontSize: 25,
 	},
 	submitButton: {
-		marginTop: 50,
+		marginTop: 20,
 		borderRadius: 10,
 	},
 	signUpTextContainer: {
-		marginTop: 100,
-		flex: 1,
 		flexDirection: 'row',
-		alignSelf: 'center',
+		paddingTop: 20,
 	},
 	signUpText: {
 		fontWeight: 'bold',

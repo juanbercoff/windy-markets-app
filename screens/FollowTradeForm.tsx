@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
+import Constants from 'expo-constants';
 
 interface Props {}
 
@@ -27,7 +28,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 	const { tradeId, userId } = route.params;
 	const handleSubmitForm = async (values: FormValues) => {
 		await fetch(
-			`http://192.168.0.115:3000/api/userTrades/${tradeId}/${userId}`,
+			`${Constants.manifest.extra.API_URL}/api/userTrades/${tradeId}/${userId}`,
 			{
 				body: JSON.stringify({
 					price: values.price,
@@ -39,7 +40,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 				method: 'POST',
 			}
 		);
-		navigation.navigate('Trades today');
+		navigation.navigate('Your Trades');
 
 		//const result = await res.json();
 	};
