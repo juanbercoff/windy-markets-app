@@ -36,7 +36,15 @@ const ListItemWindyMenu: React.FC<Props> = ({
 				disabled={trade.status === 'open' ? false : true}
 			/>
 			<Divider focusable />
-			<Menu.Item onPress={() => {}} title="View trade images" />
+			<Menu.Item
+				onPress={() => {
+					closeMenu();
+					return navigation.navigate('TradeImage', {
+						trade: trade,
+					});
+				}}
+				title="View trade images"
+			/>
 		</Menu>
 	);
 };

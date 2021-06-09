@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
+import ImagePicker from '../components/Common/ImagePicker';
 import Constants from 'expo-constants';
 
 interface Props {}
@@ -24,25 +25,40 @@ const screenWidth = Dimensions.get('window').width;
 
 const FollowTradeForm: React.FC<Props> = () => {
 	const navigation = useNavigation();
+	const [image, setImage] = useState(null);
 	const route = useRoute<RouteProp<RouteParams, 'FollowTradeForm'>>();
 	const { tradeId, userId } = route.params;
-	const handleSubmitForm = async (values: FormValues) => {
-		await fetch(
-			`${Constants.manifest.extra.API_URL}/api/userTrades/${tradeId}/${userId}`,
-			{
-				body: JSON.stringify({
-					price: values.price,
-					amount: values.amount,
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-			}
-		);
-		navigation.navigate('Your Trades');
 
-		//const result = await res.json();
+	const handleSubmitForm = async (values: FormValues) => {
+		let formData = new FormData();
+		const newImageUri = 'file:///' + image?.uri.split('file:/').join('');
+		formData.append('price', values.price);
+		formData.append('amount', values.amount);
+		formData.append('image', {
+			uri: image?.uri,
+			type: 'image/jpeg',
+			name: image?.uri.split('/').pop(),
+		});
+		try {
+			const res = await fetch(
+				`${Constants.manifest.extra.API_URL}/api/userTrades/${tradeId}/${userId}`,
+				{
+					body: formData,
+					method: 'POST',
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				}
+			);
+			if (res.ok) {
+				return navigation.navigate('Your Trades');
+			} else {
+				const error = await res.json();
+				console.log(error);
+			}
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	return (
@@ -86,6 +102,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 							{errors.amount && touched.amount ? (
 								<Text style={styles.errorText}>{errors.amount}</Text>
 							) : null}
+							<ImagePicker image={image} setImage={setImage} />
 							<Button
 								focusable
 								style={styles.submitButton}

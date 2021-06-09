@@ -52,6 +52,7 @@ export default function Register() {
 	const loginHandler = async (data: DataValues) => {
 		try {
 			const token = await registerForPushNotificationsAsync();
+			console.log('register');
 			const res = await fetch(
 				Constants.manifest.extra.API_URL + '/api/user/register',
 				{
@@ -66,7 +67,9 @@ export default function Register() {
 					}),
 				}
 			);
-			if (res.ok) return navigation.navigate('Home');
+			if (res.ok) {
+				return navigation.navigate('Home');
+			}
 		} catch (err) {
 			console.log(err);
 		}

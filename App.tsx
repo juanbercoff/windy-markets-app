@@ -2,14 +2,15 @@ import React, { useEffect } from 'react';
 
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
-import LoginScreen from './components/LoginScreen';
-import RegisterScreen from './components/RegisterScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import Home from './screens/Home';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import FollowTradeForm from './screens/FollowTradeForm';
 import SellUserTradeForm from './screens/SellUserTradeForm';
 import WindyTrades from './screens/WindyTrades';
+import TradeImage from './screens/TradeImage';
 
 const Stack = createStackNavigator();
 
@@ -71,6 +72,18 @@ export default function App() {
 						component={SellUserTradeForm}
 						options={{
 							title: 'Sell Trade',
+							headerShown: true,
+							headerStyle: {
+								backgroundColor: '#1E1E1E',
+							},
+							headerTintColor: '#fff',
+						}}
+					/>
+					<Stack.Screen
+						name="TradeImage"
+						component={TradeImage}
+						options={{
+							title: 'Trade Image',
 							headerShown: true,
 							headerStyle: {
 								backgroundColor: '#1E1E1E',

@@ -54,19 +54,22 @@ export default function Login({ navigation }) {
 		return fetch(Constants.manifest.extra.API_URL + '/api/user/login', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: 'token@test.com', password: 'testest' }),
+			body: JSON.stringify({
+				email: 'mtoken@test.com',
+				password: 'testest',
+			}),
 		})
 			.then((res) => {
 				if (res.status == 200) {
+					console.log('asd');
 					return res.json();
 				} else {
-					return showDialog();
+					showDialog();
+					throw 'access denied';
 				}
 			})
 			.then((data) => {
-				storeResponse(data);
-
-				navigation.navigate('Home');
+				storeResponse(data).then(() => navigation.navigate('Home'));
 			})
 			.catch((err) => console.log(err));
 	};

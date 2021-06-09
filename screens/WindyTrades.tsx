@@ -31,19 +31,15 @@ const WindyTrades: React.FC<{}> = () => {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			{windyTrades.length != 0 ? (
+			{windyTrades.length === 0 ? (
+				<Text style={styles.noTradesText}>No trades today</Text>
+			) : (
 				<TradesList
 					title={'Trades today'}
 					tradeType={'windy'}
 					data={windyTrades}
-					followedTrades={
-						userTrades
-							? userTrades.map((userTrades) => userTrades.trade.id)
-							: undefined
-					}
+					followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
 				/>
-			) : (
-				<Text style={styles.noTradesText}>No trades today</Text>
 			)}
 		</ScrollView>
 	);

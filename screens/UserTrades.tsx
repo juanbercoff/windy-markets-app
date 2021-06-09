@@ -21,6 +21,9 @@ const UserTrades: React.FC<{}> = () => {
 		setRefreshing(true);
 		wait(2000).then(() => setRefreshing(false));
 	}, [useUserTrades]);
+
+	/* 	if (userTrades.length === 0)
+		; */
 	return (
 		<ScrollView
 			style={styles.container}
@@ -28,17 +31,17 @@ const UserTrades: React.FC<{}> = () => {
 				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 			}
 		>
-			{userTrades.length != 0 ? (
+			{userTrades.length === 0 ? (
+				<Text style={styles.noTradesText}>
+					You are not following any trades
+				</Text>
+			) : (
 				<TradesList
 					title={'Your trades'}
 					tradeType={'user'}
 					data={userTrades}
 					followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
 				/>
-			) : (
-				<Text style={styles.noTradesText}>
-					You are not following any trades
-				</Text>
 			)}
 		</ScrollView>
 	);

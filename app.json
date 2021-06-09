@@ -27,7 +27,7 @@
 			"favicon": "./assets/favicon.png"
 		},
 		"extra": {
-			"API_URL": "161.35.8.242"
+			"API_URL": "http://192.168.0.115:3000"
 		}
 	}
 }
