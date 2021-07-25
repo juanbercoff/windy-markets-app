@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { List, Surface, Divider, Menu, IconButton } from 'react-native-paper';
+import { List, Surface, Divider } from 'react-native-paper';
 
-import { tradeText, formatElapsedTime, userTradeText } from '../helpers';
+import { tradeText, formatElapsedTime, tradeStatus } from '../helpers';
 import { Trade, UserTrade } from '../types/types';
 
 import ListItemMenu from './ListItemWindyMenu';
@@ -24,9 +24,7 @@ const ListItem: React.FC<Props> = ({ trade, following }) => {
 					titleNumberOfLines={2}
 					title={tradeText(trade)}
 					description={
-						trade.status.toUpperCase() +
-						' ' +
-						formatElapsedTime(trade.updatedAt)
+						tradeStatus(trade) + ' ' + formatElapsedTime(trade.updatedAt)
 					}
 					right={(props) => (
 						<ListItemMenu

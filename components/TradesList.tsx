@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from 'react-native-paper';
 import { Trade, UserTrade } from '../types/types';
-
+import { StyleSheet } from 'react-native';
 import ListItem from './ListItem';
 import ListItemUser from './ListItemUser';
 
@@ -19,7 +19,7 @@ const TradesList: React.FC<Props> = ({
 }) => {
 	return (
 		<List.Section focusable>
-			<List.Subheader>{title}</List.Subheader>
+			<List.Subheader style={styles.title}>{title}</List.Subheader>
 			{tradeType === 'windy'
 				? data.map((trade: any) => (
 						<ListItem
@@ -38,5 +38,11 @@ const TradesList: React.FC<Props> = ({
 		</List.Section>
 	);
 };
+
+const styles = StyleSheet.create({
+	title: {
+		textAlign: 'center',
+	},
+});
 
 export default TradesList;

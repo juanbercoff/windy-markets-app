@@ -5,6 +5,9 @@ import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
 import ImagePicker from '../components/Common/ImagePicker';
 import Constants from 'expo-constants';
+import { tradeText } from '../helpers';
+import { Trade } from '../types/types';
+import ErrorPortal from '../components/ErrorPortal';
 
 interface Props {}
 
@@ -16,7 +19,7 @@ interface FormValues {
 //move to Home
 type RouteParams = {
 	FollowTradeForm: {
-		tradeId: number;
+		trade: Trade;
 		userId: number;
 	};
 };
@@ -27,7 +30,13 @@ const FollowTradeForm: React.FC<Props> = () => {
 	const navigation = useNavigation();
 	const [image, setImage] = useState(null);
 	const route = useRoute<RouteProp<RouteParams, 'FollowTradeForm'>>();
-	const { tradeId, userId } = route.params;
+	const { trade, userId } = route.params;
+	const [visible, setVisible] = React.useState(false);
+	const [error, setError] = useState('');
+
+	const showDialog = () => setVisible(true);
+
+	const hideDialog = () => setVisible(false);
 
 	const handleSubmitForm = async (values: FormValues) => {
 		let formData = new FormData();
@@ -41,7 +50,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 		});
 		try {
 			const res = await fetch(
-				`${Constants.manifest.extra.API_URL}/api/userTrades/${tradeId}/${userId}`,
+				`${Constants.manifest.extra.API_URL}/api/userTrades/${trade.id}/${userId}`,
 				{
 					body: formData,
 					method: 'POST',
@@ -51,19 +60,21 @@ const FollowTradeForm: React.FC<Props> = () => {
 				}
 			);
 			if (res.ok) {
-				return navigation.navigate('Your Trades');
+				return navigation.navigate('YOUR TRADES');
 			} else {
-				const error = await res.json();
-				console.log(error);
+				const error = await res.text();
+				setError(error);
+				showDialog();
 			}
 		} catch (err) {
-			console.log(err);
+			setError(err);
 		}
 	};
 
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.inputContainer}>
+				<Text style={styles.tradeText}>{tradeText(trade)}</Text>
 				<Formik
 					/* validationSchema={SignupSchema} */
 					initialValues={{
@@ -79,6 +90,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 							<TextInput
 								showSoftInputOnFocus
 								focusable
+								theme={{ colors: { text: 'black' } }}
 								style={styles.inputs}
 								placeholder="Price"
 								onChangeText={handleChange('price')}
@@ -92,6 +104,7 @@ const FollowTradeForm: React.FC<Props> = () => {
 							<TextInput
 								showSoftInputOnFocus
 								focusable
+								theme={{ colors: { text: 'black' } }}
 								style={styles.inputs}
 								placeholder="Number of contracts"
 								onChangeText={handleChange('amount')}
@@ -116,6 +129,11 @@ const FollowTradeForm: React.FC<Props> = () => {
 					)}
 				</Formik>
 			</View>
+			<ErrorPortal
+				errorText={error}
+				visible={visible}
+				hideDialog={hideDialog}
+			/>
 		</SafeAreaView>
 	);
 };
@@ -147,6 +165,10 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: 'red',
 		fontSize: 12,
+	},
+	tradeText: {
+		fontSize: 14,
+		paddingBottom: 10,
 	},
 });
 

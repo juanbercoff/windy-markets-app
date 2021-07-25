@@ -3,7 +3,10 @@ import { Formik } from 'formik';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, View, StyleSheet, Dimensions } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Constants from 'expo-constants';
+import { UserTrade } from '../types/types';
+import { userTradeText } from '../helpers';
 
 interface Props {}
 
@@ -13,21 +16,22 @@ interface FormValues {
 
 //move to Home
 type RouteParams = {
-	CloseTradeForm: {
-		tradeId: number;
+	SellTradeForm: {
+		trade: UserTrade;
 	};
 };
 
 const screenWidth = Dimensions.get('window').width;
 
 const SellUserTradeForm: React.FC<Props> = () => {
+	const { colors } = useTheme();
 	const navigation = useNavigation();
-	const route = useRoute<RouteProp<RouteParams, 'CloseTradeForm'>>();
-	const { tradeId } = route.params;
+	const route = useRoute<RouteProp<RouteParams, 'SellTradeForm'>>();
+	const { trade } = route.params;
 
 	const handleSubmitForm = async (values: FormValues) => {
 		const res = await fetch(
-			`${Constants.manifest.extra.API_URL}/api/userTrades/close/${tradeId}`,
+			`${Constants.manifest.extra.API_URL}/api/userTrades/close/${trade.id}`,
 			{
 				body: JSON.stringify({
 					closePrice: values.closePrice,
@@ -40,12 +44,13 @@ const SellUserTradeForm: React.FC<Props> = () => {
 		);
 		const result = await res.json();
 		console.log(result);
-		navigation.navigate('Your Trades');
+		navigation.navigate('YOUR TRADES');
 	};
 
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.inputContainer}>
+				<Text style={styles.tradeText}>{userTradeText(trade)}</Text>
 				<Formik
 					/* validationSchema={SignupSchema} */
 					initialValues={{
@@ -61,8 +66,9 @@ const SellUserTradeForm: React.FC<Props> = () => {
 								showSoftInputOnFocus
 								focusable
 								style={styles.inputs}
-								placeholder="Close price"
+								placeholder="Sell price"
 								onChangeText={handleChange('closePrice')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.closePrice}
 								keyboardType={'numeric'}
 								mode="outlined"
@@ -100,6 +106,7 @@ const styles = StyleSheet.create({
 	},
 	inputs: {
 		width: screenWidth * 0.7,
+		alignSelf: 'center',
 	},
 	welcomeText: {
 		alignSelf: 'center',
@@ -115,6 +122,10 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: 'red',
 		fontSize: 12,
+	},
+	tradeText: {
+		fontSize: 14,
+		paddingBottom: 10,
 	},
 });
 

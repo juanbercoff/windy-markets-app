@@ -25,6 +25,7 @@ const theme = {
 		background: '#fff',
 		text: '#c4c4c4',
 		surface: '#000000',
+		formText: '#000000',
 	},
 };
 
@@ -59,7 +60,7 @@ export default function App() {
 						name="FollowTradeForm"
 						component={FollowTradeForm}
 						options={{
-							title: 'Follow Trade',
+							title: 'Follow',
 							headerShown: true,
 							headerStyle: {
 								backgroundColor: '#1E1E1E',

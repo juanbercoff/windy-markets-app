@@ -12,6 +12,7 @@ import { TextInput, Text, Button, Divider } from 'react-native-paper';
 import { registerForPushNotificationsAsync } from '../helpers';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
+import { useTheme } from 'react-native-paper';
 import * as Yup from 'yup';
 
 const SignupSchema = Yup.object().shape({
@@ -45,6 +46,7 @@ interface DataValues {
 const screenWidth = Dimensions.get('window').width;
 
 export default function Register() {
+	const { colors } = useTheme();
 	const navigation = useNavigation();
 	const [isKeyboardAvoidingEnabled, setIsKeyboardAvoidingEnabled] =
 		useState(false);
@@ -104,6 +106,7 @@ export default function Register() {
 								style={styles.inputs}
 								placeholder="First name"
 								onChangeText={handleChange('firstName')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.firstName}
 								mode="outlined"
 							/>
@@ -116,6 +119,7 @@ export default function Register() {
 								style={styles.inputs}
 								placeholder="Last name"
 								onChangeText={handleChange('lastName')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.lastName}
 								mode="outlined"
 							/>
@@ -130,6 +134,7 @@ export default function Register() {
 								style={styles.inputs}
 								placeholder="Email"
 								onChangeText={handleChange('email')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.email}
 								mode="outlined"
 							/>
@@ -144,6 +149,7 @@ export default function Register() {
 								style={styles.inputs}
 								placeholder="Password"
 								onChangeText={handleChange('password')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.password}
 								mode="outlined"
 								onFocus={() => setIsKeyboardAvoidingEnabled(true)}
@@ -160,6 +166,7 @@ export default function Register() {
 								style={styles.inputs}
 								placeholder="Re-Enter password"
 								onChangeText={handleChange('passwordConfirmation')}
+								theme={{ colors: { text: colors.formText } }}
 								value={values.passwordConfirmation}
 								mode="outlined"
 								onFocus={() => setIsKeyboardAvoidingEnabled(true)}
@@ -192,6 +199,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: 'center',
+		backgroundColor: '#121212',
 	},
 	inputContainer: {
 		marginTop: 100,

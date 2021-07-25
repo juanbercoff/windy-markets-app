@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { UserTrade, Trade } from '../types/types';
+import { UserTrade, Trade, Image } from '../types/types';
 import Constants from 'expo-constants';
 
 export const useWindyTrades = (shouldFetch: boolean, isFocused: boolean) => {
@@ -71,6 +71,38 @@ export const useUserTrades = (
 
 	return {
 		userTrades,
+		fetching,
+	};
+};
+
+export const useWindyImages = (uri: string) => {
+	const [fetching, setFetching] = useState<Boolean>(false);
+	const [images, setImages] = useState<Image[]>([]);
+
+	const getWindyImages = async (uri: string) => {
+		setFetching(true);
+		try {
+			const response = await fetch(uri, {
+				method: 'GET',
+				credentials: 'include',
+			});
+			if (response.ok) {
+				const images = await response.json();
+				setImages(images);
+			}
+			throw 'error';
+		} catch (e) {
+			console.log(e);
+		}
+		setFetching(false);
+	};
+
+	useEffect(() => {
+		getWindyImages(uri);
+	}, []);
+
+	return {
+		images,
 		fetching,
 	};
 };

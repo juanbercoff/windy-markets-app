@@ -38,7 +38,7 @@ const formatDate = (dateAsString: string) => {
 	const monthName = months[date.getMonth()];
 	const dayOfMonth = date.getDate();
 
-	return monthName + '.' + dayOfMonth + ' ';
+	return monthName + ' ' + dayOfMonth;
 };
 
 const calculateTrade = (tradeValues: Trade) => {
@@ -47,33 +47,43 @@ const calculateTrade = (tradeValues: Trade) => {
 	);
 
 	if (netValue > 0) {
-		return `GAIN ${netValue}%`;
+		return `with ${netValue}% GAIN`;
 	}
-	return `LOSS ${Math.abs(netValue)}%`;
+	return `with ${Math.abs(netValue)}% LOSS`;
+};
+
+const verbText = (tradeValues: Trade) => {
+	switch (tradeValues.status) {
+		case 'placed':
+			return 'BUY';
+
+		case 'sold':
+			return 'SELL';
+	}
 };
 
 export function tradeText(tradeValues: Trade) {
 	return (
-		(!tradeValues.closePrice ? 'BUY' : '') +
+		verbText(tradeValues) +
 		' ' +
 		tradeValues.contractType.toUpperCase() +
-		' of ' +
+		' ' +
 		tradeValues.stock.toUpperCase() +
 		' strike ' +
 		tradeValues.strike +
 		' at ' +
 		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
-		' EXP ' +
+		'\nEXP ' +
 		formatDate(tradeValues.expirationDate) +
 		' ' +
 		(tradeValues.closePrice
-			? tradeValues.status.toUpperCase() +
-			  ' at $' +
-			  tradeValues.closePrice +
-			  ' ' +
-			  calculateTrade(tradeValues)
+			? 'at $' + tradeValues.closePrice + ' ' + calculateTrade(tradeValues)
 			: '')
 	);
+}
+
+export function tradeStatus(tradeValues: Trade) {
+	return tradeValues.status.toUpperCase();
 }
 
 export const registerForPushNotificationsAsync = async () => {
@@ -106,84 +116,40 @@ export const registerForPushNotificationsAsync = async () => {
 };
 
 export function userTradeText(tradeValues: UserTrade) {
+	/* verbText(tradeValues) +
+		' ' +
+		tradeValues.contractType.toUpperCase() +
+		' ' +
+		tradeValues.stock.toUpperCase() +
+		' strike ' +
+		tradeValues.strike +
+		' at ' +
+		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
+		'\nEXP ' +
+		formatDate(tradeValues.expirationDate) +
+		' ' +
+		(tradeValues.closePrice
+			? 'at $' + tradeValues.closePrice + ' ' + calculateTrade(tradeValues)
+			: ''); */
+
 	return (
-		(!tradeValues.closePrice ? 'BOUGHT ' : '') +
+		(!tradeValues.closePrice ? 'BOT ' : 'SOLD ') +
 		tradeValues.trade.contractType.toUpperCase() +
-		' of ' +
+		' ' +
 		tradeValues.trade.stock.toUpperCase() +
 		' strike ' +
 		tradeValues.trade.strike +
 		' at $' +
 		tradeValues.price +
-		' EXP ' +
+		'\nEXP ' +
 		formatDate(tradeValues.trade.expirationDate) +
 		' ' +
 		(tradeValues.closePrice
-			? 'SOLD at $' +
+			? 'at $' +
 			  tradeValues.closePrice +
 			  ' ' +
 			  calculateTrade(tradeValues.trade)
 			: '')
-	);
-}
-
-export function newTrade(tradeValues: Trade) {
-	return (
-		'BUY ' +
-		tradeValues.contractType.toUpperCase() +
-		' of ' +
-		tradeValues.stock.toUpperCase() +
-		' strike ' +
-		tradeValues.strike +
-		' at ' +
-		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
-		' EXP ' +
-		formatDate(tradeValues.expirationDate)
-	);
-}
-
-export function confirmedTrade(tradeValues: Trade) {
-	return (
-		'FILLED BUY ' +
-		tradeValues.contractType.toUpperCase() +
-		' of ' +
-		tradeValues.stock.toUpperCase() +
-		' strike ' +
-		tradeValues.strike +
-		' at ' +
-		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
-		' EXP ' +
-		formatDate(tradeValues.expirationDate)
-	);
-}
-
-export function deletedTrade(tradeValues: Trade) {
-	return (
-		'CANCELED BUY ' +
-		tradeValues.contractType.toUpperCase() +
-		' of ' +
-		tradeValues.stock.toUpperCase() +
-		' strike ' +
-		tradeValues.strike +
-		' at ' +
-		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
-		' EXP ' +
-		formatDate(tradeValues.expirationDate)
-	);
-}
-
-export function soldTrade(tradeValues: Trade) {
-	return (
-		'SOLD ' +
-		tradeValues.contractType.toUpperCase() +
-		' of ' +
-		tradeValues.stock.toUpperCase() +
-		' strike ' +
-		tradeValues.strike +
-		' at ' +
-		(tradeValues.price ? '$' + tradeValues.price : ' Market Price ') +
-		' EXP ' +
-		formatDate(tradeValues.expirationDate)
 	);
 }
 

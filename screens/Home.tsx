@@ -17,7 +17,7 @@ const Home: React.FC<{}> = () => {
 				barStyle={{ backgroundColor: '#000000' }}
 			>
 				<Tab.Screen
-					name="Your Trades"
+					name="YOUR TRADES"
 					component={UserTrades}
 					options={{
 						tabBarIcon: ({ color }) => (
@@ -26,7 +26,7 @@ const Home: React.FC<{}> = () => {
 					}}
 				/>
 				<Tab.Screen
-					name="Trades today"
+					name="DAILY TRADES"
 					component={WindyTrades}
 					options={{
 						tabBarIcon: ({ color }) => (
@@ -36,7 +36,7 @@ const Home: React.FC<{}> = () => {
 				/>
 
 				<Tab.Screen
-					name="Profile"
+					name="PROFILE"
 					component={Profile}
 					options={{
 						tabBarIcon: ({ color }) => (

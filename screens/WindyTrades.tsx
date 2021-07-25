@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet, RefreshControl, Text } from 'react-native';
+import {
+	ScrollView,
+	StyleSheet,
+	RefreshControl,
+	Text,
+	SafeAreaView,
+} from 'react-native';
 import { getUserId } from '../helpers';
 import { useWindyTrades, useUserTrades } from '../hooks/useWindyTrades';
 import { useIsFocused } from '@react-navigation/native';
-import { InteractionManager } from 'react-native';
+import { ActivityIndicator, Colors } from 'react-native-paper';
 
 import TradesList from '../components/TradesList';
 
@@ -16,13 +22,25 @@ const wait = (timeout: number) => {
 
 const WindyTrades: React.FC<{}> = () => {
 	const isFocused = useIsFocused();
-	const { windyTrades } = useWindyTrades(true, isFocused);
+	const { windyTrades, fetching } = useWindyTrades(true, isFocused);
 	const [refreshing, setRefreshing] = React.useState(false);
 	const { userTrades } = useUserTrades(userId, true, isFocused);
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		wait(2000).then(() => setRefreshing(false));
 	}, [useWindyTrades]);
+
+	if (fetching) {
+		return (
+			<ActivityIndicator
+				animating={true}
+				color={Colors.white}
+				focusable
+				style={styles.loading}
+				size="large"
+			/>
+		);
+	}
 
 	return (
 		<ScrollView
@@ -35,7 +53,7 @@ const WindyTrades: React.FC<{}> = () => {
 				<Text style={styles.noTradesText}>No trades today</Text>
 			) : (
 				<TradesList
-					title={'Trades today'}
+					title={'DAY TRADES'}
 					tradeType={'windy'}
 					data={windyTrades}
 					followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
@@ -54,6 +72,9 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		color: '#fff',
 		fontSize: 20,
+		paddingTop: 40,
+	},
+	loading: {
 		paddingTop: 40,
 	},
 });

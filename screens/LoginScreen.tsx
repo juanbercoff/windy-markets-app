@@ -18,6 +18,8 @@ import {
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { useTheme } from 'react-native-paper';
+import ErrorPortal from '../components/ErrorPortal';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -43,6 +45,7 @@ const storeResponse = async (res: LoginResponse) => {
 };
 
 export default function Login({ navigation }) {
+	const { colors } = useTheme();
 	const [visible, setVisible] = React.useState(false);
 
 	const showDialog = () => setVisible(true);
@@ -55,8 +58,8 @@ export default function Login({ navigation }) {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				email: 'mtoken@test.com',
-				password: 'testest',
+				email: data.email,
+				password: data.password,
 			}),
 		})
 			.then((res) => {
@@ -78,6 +81,9 @@ export default function Login({ navigation }) {
 		<View style={styles.container}>
 			<StatusBar animated={true} barStyle={'light-content'} />
 			<Image style={styles.logo} source={require('../assets/logoBlack.png')} />
+			<Text style={styles.windyMarketContainer}>
+				WINDY MARKET OPTION TRADER
+			</Text>
 			<View style={styles.inputContainer}>
 				<Formik
 					initialValues={{ email: '', password: '' }}
@@ -91,7 +97,9 @@ export default function Login({ navigation }) {
 								keyboardType="email-address"
 								style={styles.inputs}
 								placeholder="Your email"
+								autoCapitalize="none"
 								onChangeText={props.handleChange('email')}
+								theme={{ colors: { text: colors.formText } }}
 								value={props.values.email}
 								mode="outlined"
 								showSoftInputOnFocus
@@ -102,6 +110,7 @@ export default function Login({ navigation }) {
 								autoCapitalize="none"
 								showSoftInputOnFocus
 								focusable
+								theme={{ colors: { text: colors.formText } }}
 								placeholder="Your password"
 								onChangeText={props.handleChange('password')}
 								secureTextEntry={true}
@@ -121,18 +130,11 @@ export default function Login({ navigation }) {
 					)}
 				</Formik>
 			</View>
-			<Portal>
-				<Dialog visible={visible} onDismiss={hideDialog}>
-					<Dialog.Content>
-						<Paragraph>Wrong username or password</Paragraph>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button focusable onPress={hideDialog}>
-							Ok
-						</Button>
-					</Dialog.Actions>
-				</Dialog>
-			</Portal>
+			<ErrorPortal
+				errorText={'Wrong username or password'}
+				visible={visible}
+				hideDialog={hideDialog}
+			/>
 			<View style={styles.signUpTextContainer}>
 				<Text>Don't have an account?</Text>
 				<Text
@@ -140,8 +142,12 @@ export default function Login({ navigation }) {
 					onPress={() => navigation.navigate('RegisterScreen')}
 				>
 					{' '}
-					Sign Up
+					Create your account
 				</Text>
+			</View>
+			<View style={styles.forgotPasswordContainer}>
+				<Text>Forgot your password? </Text>
+				<Text style={styles.signUpText}>Create a new one.</Text>
 			</View>
 		</View>
 	);
@@ -159,8 +165,12 @@ const styles = StyleSheet.create({
 		height: 131,
 		width: 84,
 	},
+	windyMarketContainer: {
+		paddingTop: 20,
+		fontSize: 18,
+	},
 	inputContainer: {
-		paddingTop: 50,
+		paddingTop: 30,
 	},
 	inputs: {
 		width: screenWidth * 0.7,
@@ -176,6 +186,9 @@ const styles = StyleSheet.create({
 	signUpTextContainer: {
 		flexDirection: 'row',
 		paddingTop: 20,
+	},
+	forgotPasswordContainer: {
+		flexDirection: 'row',
 	},
 	signUpText: {
 		fontWeight: 'bold',

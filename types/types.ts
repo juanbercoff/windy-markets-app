@@ -1,6 +1,6 @@
 export type ContractType = 'Call' | 'Put';
 
-export type Tradestatus = 'placed' | 'sold' | 'pending';
+export type Tradestatus = 'placed' | 'sold';
 
 export interface Trade {
 	closePrice: number;
@@ -37,4 +37,12 @@ export interface UserTrade {
 	userId: number;
 	closePrice: number;
 	status: string;
+}
+
+interface Image {
+	createdAt: string;
+	id: number;
+	imageURL: string;
+	tradeId: number;
+	updatedAt: string;
 }

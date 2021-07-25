@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, RefreshControl, Text } from 'react-native';
 import TradesList from '../components/TradesList';
 import { getUserId } from '../helpers';
 import { useIsFocused } from '@react-navigation/native';
-
+import { ActivityIndicator, Colors } from 'react-native-paper';
 import { useUserTrades } from '../hooks/useWindyTrades';
 
 let userId: string;
@@ -16,14 +16,23 @@ const wait = (timeout: number) => {
 const UserTrades: React.FC<{}> = () => {
 	const isFocused = useIsFocused();
 	const [refreshing, setRefreshing] = React.useState(false);
-	const { userTrades } = useUserTrades(userId, true, isFocused);
+	const { userTrades, fetching } = useUserTrades(userId, true, isFocused);
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		wait(2000).then(() => setRefreshing(false));
 	}, [useUserTrades]);
 
-	/* 	if (userTrades.length === 0)
-		; */
+	if (fetching) {
+		return (
+			<ActivityIndicator
+				animating={true}
+				color={Colors.white}
+				focusable
+				style={styles.loading}
+				size="large"
+			/>
+		);
+	}
 	return (
 		<ScrollView
 			style={styles.container}
@@ -37,7 +46,7 @@ const UserTrades: React.FC<{}> = () => {
 				</Text>
 			) : (
 				<TradesList
-					title={'Your trades'}
+					title={'YOUR TRADES'}
 					tradeType={'user'}
 					data={userTrades}
 					followedTrades={userTrades.map((userTrades) => userTrades.trade.id)}
@@ -56,6 +65,9 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		color: '#fff',
 		fontSize: 20,
+		paddingTop: 40,
+	},
+	loading: {
 		paddingTop: 40,
 	},
 });

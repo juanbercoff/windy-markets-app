@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List, Surface, Divider } from 'react-native-paper';
 
-import { formatElapsedTime, userTradeText } from '../helpers';
+import { formatElapsedTime, userTradeText, tradeText } from '../helpers';
 import { UserTrade } from '../types/types';
 
 import ListItemUserMenu from './ListItemUserMenu';

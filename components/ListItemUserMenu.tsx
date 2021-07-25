@@ -2,6 +2,7 @@ import React from 'react';
 import { Divider, Menu, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { UserTrade } from '../types/types';
+import Constants from 'expo-constants';
 
 interface Props {
 	visible: boolean;
@@ -27,9 +28,8 @@ const ListItemWindyMenu: React.FC<Props> = ({
 		>
 			<Menu.Item
 				onPress={() => {
-					closeMenu();
 					return navigation.navigate('SellUserTradeForm', {
-						tradeId: trade.id,
+						trade: trade,
 					});
 				}}
 				title="Sell"
@@ -38,12 +38,12 @@ const ListItemWindyMenu: React.FC<Props> = ({
 			<Divider focusable />
 			<Menu.Item
 				onPress={() => {
-					closeMenu();
 					return navigation.navigate('TradeImage', {
-						trade: trade,
+						uri: `${Constants.manifest.extra.API_URL}/user-trade-image/${trade.imageURL}`,
+						type: 'userImage',
 					});
 				}}
-				title="View trade images"
+				title="Trade Image"
 			/>
 		</Menu>
 	);
